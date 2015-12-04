@@ -1,0 +1,117 @@
+doctype html
+html
+  head
+    meta(http-equiv='content-type',content='text-html; charset=utf-8')
+    title sca2 - sound change applier
+    link(rel='stylesheet',href='sca2.css',type='text/css')
+  body(bgcolor='#ffffff',text='#000000')
+    form(action='',name='theform')
+      table(width='100%')
+        tr
+          td(bgcolor="#eec25a")
+            h2
+              br
+              | &nbsp;&nbsp;
+              a(href="kit.html")
+                img(src='kit-gears.gif',border=0,align='absmiddle',height='53',width='60')
+              | &nbsp;SCA&#x00b2;
+
+      i
+        | This is a Javascript update of the Sound Change Applier.
+        |  It now handles Unicode, and some rule upgrades&#8212;
+        |  press the Help button for full documentation.
+
+        p
+          | (Note: this is beta code; report errors to me at markrose at
+          | zompist.com.)
+        p &#8212;Mark Rosenfelder, 2012
+      hr
+      table(width='100%')
+        tr
+          td(colspan=2)
+            | Categories:
+            br
+            textarea#cats(name='cats',rows=10,cols=40).
+              V=aeiou
+              L=&#x0101;&#x0113;&#x012b;&#x014d;&#x016b;
+              C=ptcqbdgmnlrhs
+              F=ie
+              B=ou
+              S=ptc
+              Z=bdg
+          td(rowspan=3)
+            | Sound changes:
+            br
+            textarea#rules(name='rules',rows=30,cols=35).
+              [sm]//_#
+              i/j/_V
+              L/V/_
+              e//Vr_#
+              v//V_V
+              u/o/_#
+              gn/nh/_
+              S/Z/V_V
+              c/i/F_t
+              c/u/B_t
+              p//V_t
+              ii/i/_
+              e//C_rV
+          td(rowspan=3)
+            | Input lexicon:
+            br
+            textarea(name="ilex",rows=30,cols=20).
+              lector
+              doctor
+              focus
+              jocus
+              districtus
+              c&#x012b;vitatem
+              adoptare
+              opera
+              secundus
+              f&#x012b;liam
+              p&#x014d;ntem
+          td(rowspan=3)
+            h3 Output lexicon
+            br
+            #olex
+        tr
+          td
+            p
+              | Output format:
+              br
+              input(type='radio',name='outtype',value='text',checked) output
+              br
+              input(type='radio',name='outtype',value='arro').
+                input &#x2192; output
+              br
+              input(type='radio',name='outtype',value='dict') output [input]
+              br
+              input(type='checkbox',name='showdiff').
+                Show differences from last run
+              br
+              input(type='checkbox',name='report').
+                Report which rules apply
+              br
+              input(type='checkbox',name='rewout',checked).
+                Rewrite on output
+          td
+            p: input(type='button',value="Apply",onclick='process();')
+            p: input(type='button',value="Parse .sc",onclick='parsesc();')
+            br
+            input(type='button',value="Back to .sc",onclick='intosc();')
+            p: input(type='button',value="Help me!",onclick="helpme();")
+            br
+            input(type='button',value="IPA",onclick="showipa();")
+        tr
+          td(colspan=2)
+            | Rewrite rules:
+            br
+            textarea#rewrite(name='rewrite',rows=7,cols=20) lh|lj
+      hr
+      h3 Output
+      br
+      #mytext
+    hr
+    center: a(href='default.html'): img(src='homeg.gif',border=0,alt="Home")
+    script(src='sca2.js',language='javascript',type='text/javascript')

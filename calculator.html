@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <title>Calculator Test</title>
+    <script src="jquery-1.11.3.js"></script>
+    <script src="calculator.js"></script>
+    <script>
+    function doit() {
+        $('#output').val(parser.parse($('#input').val()));
+    }
+    </script>
+  </head>
+  <body>
+    <textarea id='input'></textarea>
+    <br/>
+    <textarea id='output'></textarea>
+    <br/>
+    <button onclick="doit();">Apply</button>
+  </body>
+</html>

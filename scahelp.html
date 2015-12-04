@@ -1,0 +1,557 @@
+<html> 
+  <head>
+    <title>SCA&#x00b2; - sound change applier - help</title>
+    <link rel="stylesheet" href="sca2.css"/>
+  </head> 
+  <body bgcolor="#ffffff" text="#000000">
+    <table width="100%">
+      <tr>
+        <td bgcolor="#eec25a">
+          <h2>
+            <br>
+            &nbsp;&nbsp;<a href="kit.html"><img src="kit-gears.gif" border=0 align="absmiddle" height="53" width="60"></a>&nbsp;SCA<sup>2</sup> Help
+          </h2>
+        </td>
+      </tr>
+    </table> 
+    <p>
+      The
+      <a href="sca2.html">Sound Change Applier 2</a>
+      is an updated version of
+      <a href="sounds.htm">my C program</a>
+      which applies a set of sound changes to a lexicon.
+      You can use it to help work out a <b>reconstruction</b> for actual
+      languages, to create plausible descendants of a <b>conlang</b>,
+      or in fact to make any structured set of lexical changes to a
+      database of words.
+    </p>
+    <p>
+      This version is written in <b>Javascript</b>, which means it runs in
+      your browser.  The advantage is that it supports Unicode,
+      it'll run on all systems, and you don't have to mess with ASCII or
+      command lines anymore.
+    </p>
+    <p><a href="#new">Changes since the old SCA</a>.</p>
+    <h3>Example</h3>
+      Try it out!  With the default inputs, hit <b>Apply</b>.
+      You should get an output like this:
+
+      <blockquote>
+        <pre>
+<tt>leitor</tt>
+<tt>doutor</tt>
+<tt>fogo</tt>
+<tt>jogo</tt>
+<tt>distrito</tt>
+<tt>cidade</tt>
+<tt>adotar</tt>
+<tt>obra</tt>
+<tt>segundo</tt>
+        </pre>
+      </blockquote>
+
+      As if by magic, a selection of Latin words has turned into Portuguese. 
+
+    <h3>The controls</h3>
+
+    Here's what the controls do.
+
+    <p>
+      <b>Output format</b>
+      tells how you want each line of the output to look like.
+      The first option just prints each output word; this is good for
+      generating a new list of words (e.g. as input for the next round of
+      changes).  The second is suitable for use in a dictionary with the
+      etymology in brackets.   The third gives the input and output words in
+      order. (<a href="#gloss">See here</a> for how to add glosses.)
+
+    <p>
+      <b>Show differences from last run</b>,
+      if checked, will
+      <b>boldface</b>
+      any changes from the last run when you hit Apply.
+      This can be very useful to see what the effect of a changed rule is.
+      (Try it with the defaults: change <tt>[sm]//_#</tt>
+      in the first sound change to <tt>[m]//_#</tt> and hit Apply.
+      You should see several of the words change, now retaining their final s.)
+
+    <p>
+      The comparison is very simple-minded; in particular it can't keep track
+      of added or deleted lines in the lexicon.
+
+    <p>
+      Note that if you hit Apply without making any changes, all the bolding
+      is removed (since in fact nothing changed between runs).
+
+    <p>
+      <b>Report which rules apply</b>
+      prints a report in the Output section listing every time a rule applies,
+      like this:
+
+      <blockquote><tt>u/o/_# applies to districtu at 8</tt></blockquote>
+
+      This is useful for understanding why a rule applies (or doesn't) when
+      you expected the opposite.  
+
+    <p>
+      <b>Rewrite on output</b>
+      controls whether the <a href="#rr">rewrite rules</a> should be reversed
+      when writing the output lexicon.
+
+    <p>
+      <b>Apply</b>
+      applies the sound changes to the input lexicon, generating the output
+      lexicon.  We'll talk about exactly what that means below. 
+
+    <p>
+      Javascript, to protect your computer, cannot read or write
+      <b>files</b>.  Instead:
+
+      <ul>
+        <li>To <b>save a file</b>, hit <b>Back to .sc</b>, copy the text in
+        the Sound Changes box, and save it yourself in Notepad or whatever.
+        <li>To <b>read in a file</b>, grab the text from Notepad and paste it
+        into the Sound Changes box.  Then hit <b>Parse .sc</b> to move the
+        lines into the appropriate boxes.  (Comments, meaning anything the
+        program can't recognize, stay in the Sound Changes box.)
+      </ul>
+
+    <p>
+      <b>Help me!</b> brings up this help file.
+
+    <p>
+      <b>IPA</b> will post a set of IPA and other useful Unicode characters
+      to the Output area.  You can then copy and paste a character into any
+      of the input boxes.
+
+    <p>On Safari and Firefox, <b>Undo</b> will work as it should: you can make
+      a change, hit Apply, and if you don't like the results, click on the text
+      box you changed and select Undo.  This doesn't work on IE. 
+
+    <h3>Defining sound changes</h3>
+
+    The Sound Changes box are rules for modifying the input lexicon.
+
+    Hopefully the format of the rules will be familiar to any linguist.
+    For instance, here's one sound change:
+
+    <blockquote><tt>c/g/V_V</tt></blockquote>
+
+    This rule says to change <tt>c</tt> to <tt>g</tt> between vowels.
+    (We'll see how to generalize this rule below.)
+
+    <p>More generally, a sound change looks like this: 
+
+    <blockquote>
+    <font color="#C08700"><i><b>target/replacement/environment</b></i></font>
+    </blockquote>
+
+    that is, the target string is changed to the replacement string within
+    the given environment.
+
+    <p>Optionally you can use &rarr; in place of the first slash.  So the
+    above rule can also be written
+
+    <blockquote><tt>c&rarr;g/V_V</tt></blockquote>
+
+    <p>The environment must always contain an underline <tt>_</tt>,
+    representing the part that changes.  That can be all there is, as in 
+
+    <blockquote><tt>gn/nh/_ </tt><br></blockquote>
+
+    which tells the program to replace <tt>gn</tt> with <tt>nh</tt>
+    unconditionally.
+
+    <p>The character <tt>#</tt> represents the <b>beginning or end</b>
+    of the word.  So
+
+    <blockquote><tt>u/o/_#</tt></blockquote>
+
+    means to replace <tt>u</tt> with <tt>o</tt>, but only at the end of
+    the word.
+
+    <p>The replacement string can be <b>blank</b>, as in
+
+      <blockquote><tt>s//_#</tt></blockquote>
+
+      This means that <tt>s</tt> is <b>deleted</b> when it ends a word.
+
+    <h4>Categories</h4>
+
+    <p>
+      The environment can contain <b>variables</b>, like <tt>V</tt> above.  
+      These are defined in the Categories box.  I use capital letters for this,
+      though this is not a requirement.  Variables can only be one character
+      long (unless you use <a href="#rr">rewrite rules</a>).
+
+      You can define any variables needed to state your sound changes.
+      E.g. you could define <tt>S</tt> to be any stop, or <tt>K</tt>
+      for any coronal, or whatever.
+
+    <p>So the category definition and rule
+
+    <blockquote><tt>F=ie<br>c/i/F_t</tt></blockquote>
+
+    means that <tt>c</tt> changes to <tt>i</tt> after a front vowel and before
+    a <tt>t</tt>.
+
+    <p>
+      You can use variables in the first two parts as well. For instance,
+      suppose you've defined
+
+      <blockquote><tt>S=ptc<br>Z=bdg<br>S/Z/V_V</tt></blockquote>
+
+      This means that the stops <tt>ptc</tt> change to their voiced equivalents
+      <tt>bdg</tt> between vowels.  In this usage, the variables must
+      correspond one for one&mdash; <tt>p</tt> goes to <tt>b</tt>,
+      <tt>t</tt> goes to <tt>d</tt>, etc.  Each character in the replacement
+      variable (here <tt>Z</tt>) gives the transformed value of each character
+      in the input variable (here <tt>S</tt>).
+
+      If the replacement category is shorter than the target category,
+      the matching input will be deleted.
+    </p>
+
+    <p>
+      A variable can also be set to a fixed value, or deleted.  E.g.
+
+      <blockquote><tt>Z//V_V</tt></blockquote>
+      says to delete voiced stops between vowels.
+    </p>
+
+    <h4>Rule order</h4>
+    <p>
+      Rules apply in the <b>order</b> they're listed.
+      So, with the word <tt>opera</tt> and the rules
+
+      <blockquote><tt>p/b/V_V<br>e//C_rV</tt></blockquote>
+
+      the first rule voices the <tt>p</tt>, resulting in <tt>obera</tt>;
+      the second deletes an <tt>e</tt> between a consonant and an
+      intervocalic <tt>r</tt>, resulting in <tt>obra</tt>.
+    </p>
+
+    <h4>Optional elements in the environment</h4>
+
+    <p>
+      One or more elements in the environment can be marked as
+      <b>optional</b> with parentheses.  E.g.
+
+      <blockquote><tt>u/&uuml;/_C(C)F</tt></blockquote>
+
+      says to change <tt>u</tt> to <tt>&uuml;</tt>
+      when it's followed by one or two consonants and then a front vowel.
+    </p>
+
+    <h3><a name="new">New stuff</a></h3>
+
+    In addition to Unicode support, the IPA chart, and
+    <a href="#rr">rewrite rules</a>:
+
+    <p>
+      SCA&#x00b2; treats <b>spaces as word boundaries</b>.
+      So if you have a rule
+
+      <blockquote><tt>k/s/#_</tt></blockquote>
+
+      then it will not only turn <tt>kima</tt> to <tt>sima</tt>,
+      but <tt>kima kimaka</tt> to <tt>sima simaka</tt>.  
+
+    <p>
+      <b>Epenthesis</b> is supported by leaving the target part of the rule
+      blank.  The replacement string must be nonblank, and the environment
+      must contain at least one symbol besides <tt>_</tt>.  For instance
+
+      <blockquote><tt>/j/_kt</tt></blockquote>
+
+      will insert <tt>j</tt> before every instance of <tt>kt</tt>.
+
+    <p>
+      Simple <b>metathesis</b> is supported by the special replacement string
+      <tt>\\</tt>.  For instance
+
+      <blockquote><tt>nt/\\/_V</tt></blockquote>
+
+      will turn all instances of <tt>nt</tt> before a vowel to <tt>tn</tt>.
+
+      (To be precise, the input string is reversed; it can be of any length.)
+
+    <p>
+      <b>Nonce categories</b> can be defined either in the target
+      (first part of the rule) or environment (last part), by enclosing
+      the alternatives within brackets.  Examples:  
+
+      <blockquote>
+        <table>
+          <tr>
+            <td><tt>k/s/_[ie]</tt></td>
+            <td>
+              Change <tt>k</tt> to <tt>s</tt> before either
+              <tt>i</tt> or <tt>e</tt>.
+            </td>
+          </tr><tr>
+            <td><tt>[ao]u/o/_</tt></td>
+            <td>
+              Either <tt>au</tt> or <tt>ou</tt> is changed to <tt>o</tt>.
+            </td>
+          </tr>
+          <tr>
+            <td><tt>m/n/_[dt#]</tt></td>
+            <td>
+              Change <tt>m</tt> to <tt>n</tt> before dentals and word-finally.
+            </td>
+          </tr>
+        </table>
+      </blockquote>
+
+       With the SCA1 I found myself writing a lot of similar rules,
+       and nonce categories let them be combined.
+
+    <p>
+      Nonce categories in the environment (only) can include other categories:
+
+      <blockquote>
+        <table>
+          <tr>
+            <td><tt>k/g/_[VL]</tt></td>
+            <td>
+              Change <tt>k</tt> to <tt>g</tt> before any member
+              of categories <tt>V</tt> or <tt>L</tt>.
+            </td>
+          </tr>
+        </table>
+      </blockquote>
+        
+    <p>
+      Nonce categories in the environment can include the word boundary
+      <tt>#</tt>.
+        
+    <p>
+      <b>Degemination</b>
+      can be accomplished using the special character &#x00b2;.
+      (Note that this is the first character shown in the IPA display.)
+
+      <blockquote>
+        <table>
+          <tr>
+            <td><tt>m//_&#x00b2;</tt></td>
+            <td width="20px">&nbsp;</td>
+            <td>Change <tt>mm</tt> to <tt>m</tt>.</td>
+          </tr>
+          <tr>
+            <td><tt>M=mn<br>M//_&#x00b2;</tt></td>
+            <td width="20px">&nbsp;</td>
+            <td>Change <tt>mm</tt> to <tt>m</tt> and <tt>nn</tt> to <tt>n</tt>,
+            but leave <tt>mn</tt> and <tt>nm</tt> alone.</td>
+          </tr>
+        </table>
+      </blockquote>
+
+      Finally, SCA&#x00b2; now supports <b>extended category substitution</b>.
+      The target must still begin with a category; however, other material may
+      occur after it.  And the replacement string may contain any number of
+      characters, with a category string given at any point.  Examples: 
+
+      <blockquote>
+        <table>
+          <tr>
+            <td><tt>Bi/Dj/_</tt></td>
+            <td width="20px">&nbsp;</td>
+            <td>
+              Instances of <tt>B</tt> plus <tt>i</tt> are changed to the
+              corresponding member of <tt>D</tt> plus <tt>j</tt>.
+            </td>
+          </tr>
+          <tr>
+            <td><tt>Nd/bM/_V</tt></td>
+            <td width="20px">&nbsp;</td>
+            <td>
+              Instances of <tt>N</tt> plus <tt>d</tt> before a vowel are
+              changed to <tt>b</tt> plus the corresponding member of
+              <tt>M</tt>; note that this is a more complicated metathesis.
+            </td>
+          </tr>
+        </table>
+      </blockquote>
+    </p>
+
+    <p>
+      You can do <b>gemination</b> on category substitution, like this:
+ 
+      <blockquote><tt>M/M&#x00b2;/_</tt></blockquote>
+
+      This will geminate all members of category <tt>M</tt>.
+
+    </p>
+    <p>
+      You can use a special <b>wildcard</b> <tt>&#x2026;</tt> to match
+      anything.  This allows you to test for something earlier or later on in
+      the word.  E.g. this rule will change a member of <tt>S</tt>
+      to <tt>Z</tt> if there is a vowel <tt>V</tt> <i>anywhere</i> following
+      it:
+
+      <blockquote><tt>S/Z/_&#x2026;V</tt></blockquote>
+
+      <p>(This is a new feature and may still have bugs.)</p>
+
+    <p>
+      The <tt>&#x2026;</tt> symbol is the third character in the IPA list.
+      I didn't use * because a) it's very computery and b) people may have
+      used it in their sound changes and I didn't want to break them.
+    </p>
+
+    <h3><a name="gloss">Including a gloss</a></h3>
+
+    It can be convenient to include a gloss in your lexicon which isn't
+    affected by the sound changes.  This is done by separating the gloss with
+    a space plus the special character &#x2023; (this is the second character
+    in the text shown by the IPA button).  For instance:
+
+    <blockquote><tt>focus &#x2023; fire</tt></blockquote>
+
+    Here's the output you'll get from that (with the default sound changes),
+    in each of the output formats:
+
+    <blockquote>
+      <tt>
+        fogo &#x2023; fire<br>
+        fire &rarr; fogo &#x2023; fire<br>
+        fogo &#x2023; fire [focus]
+      </tt>
+    </blockquote>
+
+    No sound changes will apply to anything after &#x2023;, but rewrite rules
+    do apply, so if you use this option I recommend using non-English
+    characters for the rewrite rules (e.g. use <tt>&#x03c7;</tt> rather than
+    <tt>x</tt> for <tt>kh</tt>).
+
+    <h3><a name="except">Rule exceptions</a></h3>
+
+    Sometimes you'd like to say that a rule applies in environment
+    e<sub>1</sub>, except for environment e<sub>2</sub>.
+    You can generally handle this by writing more rules, but SCA&#x00b2;
+    also allows you to state this directly by adding e<sub>2</sub>
+    after another slash, e.g.
+
+    <blockquote>
+      <table>
+        <tr>
+          <td><tt>k/s/_F/#s_</tt></td>
+          <td width="20px">&nbsp;</td>
+          <td>
+            <tt>k</tt> changes to <tt>s</tt> before a front vowel,
+            but <b>not</b> after word-initial <tt>s</tt>.
+          </td>
+        </tr>
+        <tr>
+          <td><tt>M/N/#_/_CF</tt></td>
+          <td width="20px">&nbsp;</td>
+          <td>
+            Category <tt>M</tt> changes to category <tt>N</tt> word initially,
+            but <b>not</b> before another consonant followed by a  front vowel. 
+          </td>
+        </tr>
+      </table>
+    </blockquote>
+
+    Because of the difficulty of lining up the <tt>_</tt> in both environments,
+    the exception environment can't include optional characters (those in
+    parentheses) before the underline.  (They can occur after it.)
+
+    <h3><a name="rr">Rewrite rules</a></h3>
+
+    These allow you to apply global substitutions to the input and output.
+    The most important use is to allow <b>digraphs</b>.
+
+    <blockquote>
+      <i><font color="red">If you use digraphs, you must follow the rules
+      in this section.  SCA&#x00b2; won't handle digraphs properly on
+      its own.</font></i>
+    </blockquote>
+
+    Rules with diagraphs will work so long as they can be treated as
+    sequences of characters.  For instance, these all work fine:
+
+    <blockquote>
+      <tt>c/ch/_a</tt>
+      <br>
+      <tt>sh/zh/V_V</tt>
+      <br>
+      <tt>u/o/_ng</tt>
+    </blockquote>
+
+    But you can't define categories with digraphs.  E.g. this was probably
+    intended to define three fricatives <tt>kh sh zh</tt>
+
+    <blockquote><tt>F=khshzh</tt></blockquote>
+
+    but in fact it defines the F category as <tt>k h s h z h</tt>,
+    which won't at all do what you expect.
+
+    <p>
+      The old SCA required that you use single characters instead.  E.g. you
+      might write 
+
+      <blockquote><tt>F=x&#x00df;&#x03a9;</tt></blockquote>
+
+      That still works, but you can use rewrite rules instead.
+      E.g. define some rules like this:
+
+      <blockquote>
+        <tt>kh|x</tt>
+        <br>
+        <tt>zh|&#x017e;</tt>
+        <br>
+        <tt>sh|&#x0161;</tt>
+        <br>
+        <tt>ng|&#x014b;</tt>
+      </blockquote>
+
+      Now you can use <tt>kh zh sh ng</tt> in any of the other input
+      boxes&mdash; categories, sound changes, input lexicon.  The SCA will
+      apply the rewrite rules to provide single characters it can work with,
+      and then apply them again backwards to provide output using digraphs.
+
+    <p>
+      You could also use rewrite rules to allow longer or mnemonic names for
+      your categories.  E.g. 
+
+      <blockquote>
+        <tt>&lt;front&gt;|F</tt>
+      </blockquote>
+
+      Now you could write sound changes like
+
+      <blockquote>
+        <tt>i/&uuml;/_&lt;front&gt;</tt>
+      </blockquote>
+
+      (The category names still have to be unique&mdash; you can't use
+      <tt>F</tt> to define both front vowels and fricatives.  But recall
+      that you can use any Unicode character now for category names.)
+
+    <p>
+      A warning though: so they operate quickly, the rewrite rules are global
+      and non-contextual.  The results may surprise you if you didn't realize
+      your transcription system was ambigious.  E.g. don't use <tt>kh</tt>
+      both for IPA /x/ and for the cluster /k h/.  
+
+    <p>
+      If you need contextual rewrite rules... just use SCA&#x00b2;!
+      Add your rewrite rules at the top and bottom of the file, with the
+      appropriate context specifications.  
+
+    <p>
+      Sometimes you want the rewrite rules to apply only to the input.
+      (For instance, the orthography may only apply to the parent language.)
+      In that case, make sure <b>Rewrite on output</b> is unchecked.
+
+    <hr>
+
+    <center>
+      <a href="default.html"><img src="homeg.gif" border=0 alt="Home"></a>
+    </center>
+  </body>
+</html>
+
+

@@ -1,0 +1,11 @@
+lector
+doctor
+focus
+jocus
+districtus
+civitatem
+adoptare
+opera
+secudus
+tutti
+baskt
